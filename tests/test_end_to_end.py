@@ -104,6 +104,26 @@ def markdown_section(text: str, heading: str) -> str:
     return match.group(1)
 
 
+def test_notebook_prepara_il_path_kaggle_prima_di_importare_il_modulo():
+    notebook = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
+    cella_setup = next(
+        "".join(cell.get("source", []))
+        for cell in notebook["cells"]
+        if "from churn_inference import valida_dataset_sorgente" in "".join(
+            cell.get("source", [])
+        )
+    )
+
+    inserimento = (
+        'sys.path.insert(0, '
+        '"/kaggle/input/telco-churn-notebook-support-files")'
+    )
+    assert inserimento in cella_setup
+    assert cella_setup.index(inserimento) < cella_setup.index(
+        "from churn_inference import valida_dataset_sorgente"
+    )
+
+
 def test_allowlist_kaggle_include_tutti_i_requirements_ricorsivi():
     kaggle = KAGGLE.read_text(encoding="utf-8")
     upload = markdown_section(kaggle, "Files to upload")
