@@ -25,6 +25,7 @@ MODULE = ROOT / "churn_inference.py"
 INPUT = ROOT / "examples" / "customers_sample.xlsx"
 NOTEBOOK = ROOT / "telco_customer_churn_analysis.ipynb"
 README = ROOT / "README.md"
+README_EN = ROOT / "README_EN.md"
 MODEL_CARD = ROOT / "MODEL_CARD.md"
 KAGGLE = ROOT / "KAGGLE.md"
 
@@ -290,12 +291,22 @@ def test_claim_notebook_sono_coerenti_con_i_limiti_della_model_card():
     assert "dice come agire" not in module
 
 
-def test_metriche_xgboost_sincronizzate_tra_readme_e_notebook():
-    readme = README.read_text(encoding="utf-8")
+@pytest.mark.parametrize(
+    ("readme_path", "row_label"),
+    (
+        (README, "XGBoost, benchmark bloccato"),
+        (README_EN, "XGBoost, locked benchmark"),
+    ),
+)
+def test_metriche_xgboost_sincronizzate_tra_readme_e_notebook(
+    readme_path,
+    row_label,
+):
+    readme = readme_path.read_text(encoding="utf-8")
     _, outputs = notebook_text()
 
     readme_match = re.search(
-        r"^\| XGBoost, locked benchmark \| "
+        rf"^\| {re.escape(row_label)} \| "
         r"([0-9.]+) \| ([0-9.]+) \| ([0-9.]+) \| ([0-9.]+) \| "
         r"([0-9.]+) \| ([0-9.]+) \| ([0-9]+) \| ([0-9]+) \| ([0-9]+) \|$",
         readme,
@@ -309,7 +320,7 @@ def test_metriche_xgboost_sincronizzate_tra_readme_e_notebook():
         flags=re.MULTILINE,
     )
 
-    assert readme_match, "riga XGBoost non trovata nel README"
+    assert readme_match, f"riga XGBoost non trovata in {readme_path.name}"
     assert notebook_match, "riga XGBoost non trovata negli output del notebook"
 
     readme_values = np.array([float(x) for x in readme_match.groups()[:6]])
