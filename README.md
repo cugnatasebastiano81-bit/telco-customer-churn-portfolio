@@ -1,66 +1,74 @@
-# Telco Customer Churn: from model selection to score analysis
+# Telco Customer Churn: dalla selezione del modello all'analisi dei punteggi
 
-An end-to-end machine-learning project that predicts customer churn and turns
-probabilities into a ranked score table for technical review. The analysis goes
-beyond model accuracy: it compares imbalance strategies, selects the decision
-threshold under hypothetical error-cost weights, freezes score deciles on the
-training distribution, and
-keeps the final holdout set untouched until every modeling decision is locked.
+**Italiano** | [English](README_EN.md)
 
-The notebook is written in Italian; this README and the model card summarize the
-method and results in English.
+Progetto end-to-end di machine learning per stimare il churn dei clienti e
+trasformare le probabilità in una tabella ordinata di punteggi destinata alla
+revisione tecnica. L'analisi non si limita all'accuratezza: confronta le
+strategie per lo sbilanciamento delle classi, seleziona la soglia decisionale
+con pesi ipotetici degli errori, definisce i decili di rischio sulla
+distribuzione di training e mantiene intatto il set di test finale fino al
+blocco di tutte le decisioni di modellazione.
 
-This portfolio project was developed as part of my training as a Machine
-Learning/AI Engineer. It demonstrates a reproducible prototype, not a production
-deployment or a professional client engagement.
+Il notebook è scritto in italiano. La versione inglese di questa pagina è
+disponibile in [README_EN.md](README_EN.md).
 
-## What this project demonstrates
+Questo progetto di portfolio è stato sviluppato durante il mio percorso di
+formazione come Machine Learning/AI Engineer. Dimostra un prototipo
+riproducibile, non un sistema in produzione né un incarico professionale per un
+cliente.
 
-- A single scikit-learn pipeline for feature engineering, scaling, encoding and
-  classification, with deterministic handling of unseen categories.
-- A numerical comparison of no correction, class weights and SMOTE across
-  Logistic Regression, Random Forest and XGBoost.
-- Five-fold out-of-fold predictions for model comparison, threshold selection
-  and reference risk deciles.
-- A final holdout evaluation performed once, without retuning.
-- Global and local interpretability: logistic coefficients, SHAP for XGBoost,
-  and customer-level reasons attached to each prediction.
-- A serialized model with its threshold, decile boundaries and explanation
-  baseline embedded in the same artifact.
-- Strict validation of numeric fields and missing or blank categorical values,
-  plus an end-to-end test covering Excel input, real model loading, inference
-  and CSV output in a new Python process.
+## Che cosa dimostra il progetto
 
-## Final holdout results
+- Un'unica pipeline scikit-learn per feature engineering, scaling, encoding e
+  classificazione, con gestione deterministica delle categorie mai viste.
+- Un confronto numerico tra nessuna correzione, pesi di classe e SMOTE su
+  Regressione Logistica, Random Forest e XGBoost.
+- Predizioni out-of-fold a cinque fold per confrontare i modelli, scegliere la
+  soglia e definire i decili di rischio di riferimento.
+- Una valutazione finale sul set di test eseguita una sola volta, senza
+  ulteriore ottimizzazione.
+- Interpretabilità globale e locale tramite coefficienti della regressione
+  logistica, SHAP per XGBoost e motivazioni associate a ogni previsione.
+- Un modello serializzato che incorpora soglia, limiti dei decili e baseline
+  esplicativa nello stesso artefatto.
+- Validazione rigorosa dei campi numerici e dei valori categorici mancanti o
+  vuoti, più un test end-to-end che copre input Excel, caricamento reale del
+  modello, inferenza e output CSV in un nuovo processo Python.
 
-The selected Logistic Regression uses a threshold of `0.4265`, chosen from
-out-of-fold training predictions with a false-negative to false-positive cost
-ratio of 5:1.
+## Risultati finali sul set di test
 
-| Model | Threshold | ROC-AUC | PR-AUC | Precision | Recall | F1 | FN | FP | Cost units |
+La Regressione Logistica selezionata usa una soglia di `0.4265`, scelta dalle
+predizioni out-of-fold del training con un rapporto di costo tra falsi negativi
+e falsi positivi pari a 5:1.
+
+| Modello | Soglia | ROC-AUC | PR-AUC | Precision | Recall | F1 | FN | FP | Unità di costo |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Logistic Regression, selected | 0.4265 | 0.854 | 0.675 | 0.490 | 0.837 | 0.618 | 61 | 326 | 631 |
-| XGBoost, locked benchmark | 0.3775 | 0.854 | 0.670 | 0.481 | 0.877 | 0.621 | 46 | 354 | 584 |
+| Regressione Logistica, selezionata | 0.4265 | 0.854 | 0.675 | 0.490 | 0.837 | 0.618 | 61 | 326 | 631 |
+| XGBoost, benchmark bloccato | 0.3775 | 0.854 | 0.670 | 0.481 | 0.877 | 0.621 | 46 | 354 | 584 |
 
-XGBoost achieved the lower cost under the chosen hypothetical cost ratio. The
-Logistic Regression was retained because its cross-validated ROC-AUC
-(`0.8617 ± 0.0124`) was within the one-standard-error range of XGBoost
-(`0.8641 ± 0.0098`), while offering a smaller, directly interpretable model.
-This is a modeling choice, not a claim that the logistic model dominates every
-business scenario. The notebook reports the full sensitivity analysis.
+XGBoost ha ottenuto il costo più basso con il rapporto ipotetico scelto. La
+Regressione Logistica è stata mantenuta perché la sua ROC-AUC in validazione
+incrociata (`0.8617 ± 0.0124`) rientrava nell'intervallo di un errore standard
+di XGBoost (`0.8641 ± 0.0098`) e offriva un modello più compatto e direttamente
+interpretabile. È una scelta di modellazione, non l'affermazione che la
+regressione logistica sia superiore in ogni scenario commerciale. Il notebook
+riporta l'intera analisi di sensitività.
 
-## Repository contents
+## Contenuto del repository
 
 ```text
 .
-├── telco_customer_churn_analysis.ipynb  # executed end-to-end analysis
-├── churn_inference.py                   # preprocessing and inference contract
-├── pipeline_churn.joblib                # fitted Logistic Regression pipeline
-├── predict_churn.py                     # Excel-to-CSV command-line example
-├── MODEL_CARD.md                        # intended use, metrics and limitations
-├── DATASET.md                           # source and data contract
+├── README.md                            # pagina principale in italiano
+├── README_EN.md                         # versione inglese
+├── telco_customer_churn_analysis.ipynb  # analisi end-to-end eseguita
+├── churn_inference.py                   # preprocessing e contratto di inferenza
+├── pipeline_churn.joblib                # pipeline di Regressione Logistica addestrata
+├── predict_churn.py                     # esempio da Excel a CSV da riga di comando
+├── MODEL_CARD.md                        # uso previsto, metriche e limiti
+├── DATASET.md                           # fonte e contratto dei dati
 ├── examples/
-│   └── customers_sample.xlsx            # synthetic inference-only sample
+│   └── customers_sample.xlsx            # esempio sintetico per la sola inferenza
 └── tests/
     ├── test_churn_inference.py
     └── test_end_to_end.py
@@ -68,18 +76,20 @@ business scenario. The notebook reports the full sensitivity analysis.
 
 ## Dataset
 
-The training dataset is not redistributed in this repository. Download
-`Telco_customer_churn.xlsx` from the
-[IBM Telco Customer Churn dataset on Kaggle](https://www.kaggle.com/datasets/yeanzc/telco-customer-churn-ibm-dataset)
-and place it next to the notebook. Alternatively, set `TELCO_CHURN_DATA` to the
-file path. On Kaggle, the notebook also searches the attached input datasets.
+Il dataset di training non viene redistribuito in questo repository. Scaricare
+`Telco_customer_churn.xlsx` dal
+[dataset IBM Telco Customer Churn su Kaggle](https://www.kaggle.com/datasets/yeanzc/telco-customer-churn-ibm-dataset)
+e collocarlo accanto al notebook. In alternativa, impostare
+`TELCO_CHURN_DATA` con il percorso del file. Su Kaggle il notebook cerca anche
+tra i dataset collegati come input.
 
-See [DATASET.md](DATASET.md) for the expected schema and source notes.
+Per lo schema previsto e le note sulla fonte, consultare
+[DATASET.md](DATASET.md).
 
-## Run inference
+## Eseguire l'inferenza
 
-Use CPython 3.12. The model is serialized with scikit-learn 1.9.0, so the pinned
-environment is part of the artifact contract.
+Usare CPython 3.12. Il modello è serializzato con scikit-learn 1.9.0, quindi
+l'ambiente con versioni bloccate fa parte del contratto dell'artefatto.
 
 ```powershell
 python -m venv .venv
@@ -87,8 +97,9 @@ python -m venv .venv
 .venv\Scripts\python predict_churn.py
 ```
 
-The default command reads the synthetic Excel sample and writes
-`outputs/churn_scores_above_threshold.csv`. Custom paths are supported:
+Il comando predefinito legge l'esempio Excel sintetico e scrive
+`outputs/churn_scores_above_threshold.csv`. È possibile specificare percorsi
+diversi:
 
 ```powershell
 .venv\Scripts\python predict_churn.py `
@@ -97,35 +108,36 @@ The default command reads the synthetic Excel sample and writes
   --output outputs\churn_scores_above_threshold.csv
 ```
 
-Never load an untrusted `.joblib` file: Python model serialization can execute
-code while loading.
+Non caricare mai un file `.joblib` non attendibile: la serializzazione dei
+modelli Python può eseguire codice durante il caricamento.
 
-## Reproduce the analysis
+## Riprodurre l'analisi
 
 ```powershell
 .venv\Scripts\python -m pip install -r requirements-notebook.txt
 .venv\Scripts\python -m ipykernel install --user --name telco-churn
 ```
 
-Open `telco_customer_churn_analysis.ipynb`, select the `telco-churn` kernel and
-run all cells. The notebook uses a single process to keep the run deterministic
-across constrained environments. Kaggle users can instead attach the dataset
-and run the notebook directly.
+Aprire `telco_customer_churn_analysis.ipynb`, selezionare il kernel
+`telco-churn` ed eseguire tutte le celle. Il notebook usa un singolo processo
+per mantenere deterministica l'esecuzione anche in ambienti con risorse
+limitate. Su Kaggle è invece possibile collegare il dataset ed eseguire
+direttamente il notebook.
 
-## Run the tests
+## Eseguire i test
 
 ```powershell
 .venv\Scripts\python -m pip install -r requirements-dev.txt
 .venv\Scripts\python -m pytest
 ```
 
-The full pinned environment used by continuous integration is available in
-`requirements-lock.txt`.
+L'ambiente completo con versioni bloccate usato dall'integrazione continua è
+disponibile in `requirements-lock.txt`.
 
-## Scope
+## Perimetro
 
-This is a portfolio-grade decision-support prototype built on an IBM sample
-dataset. It is not a deployed retention system and does not establish causal
-effects. Before operational use it would require current company data, a
-calibrated cost model, subgroup performance review, monitoring and a retraining
-policy.
+Questo è un prototipo di supporto decisionale da portfolio, costruito su un
+dataset dimostrativo IBM. Non è un sistema di retention distribuito e non
+dimostra relazioni causali. Prima di un impiego operativo sarebbero necessari
+dati aziendali aggiornati, un modello dei costi validato, una valutazione delle
+prestazioni per sottogruppo, monitoraggio e una politica di riaddestramento.
