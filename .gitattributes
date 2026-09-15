@@ -1,0 +1,6 @@
+# Preserve byte-stable text files on every operating system.
+* text=auto eol=lf
+
+# Never apply end-of-line conversion to binary artifacts.
+*.xlsx binary
+*.joblib binary
