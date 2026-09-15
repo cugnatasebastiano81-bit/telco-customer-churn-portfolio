@@ -1,0 +1,20 @@
+# Lock completo dell'ambiente di verifica del pacchetto serializzato.
+# Runtime verificato: CPython 3.12.14, Windows x86-64.
+colorama==0.4.6
+et_xmlfile==2.0.0
+iniconfig==2.3.0
+joblib==1.5.3
+narwhals==2.26.0
+numpy==2.3.5
+openpyxl==3.1.5
+packaging==26.3
+pandas==3.0.1
+pluggy==1.6.0
+Pygments==2.21.0
+python-dateutil==2.9.0.post0
+scikit-learn==1.9.0
+scipy==1.15.3
+six==1.17.0
+threadpoolctl==3.6.0
+pytest==8.4.1
+tzdata==2026.3

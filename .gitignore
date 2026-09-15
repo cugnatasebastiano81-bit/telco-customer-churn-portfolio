@@ -1,0 +1,9 @@
+.venv*/
+__pycache__/
+.pytest_cache/
+outputs/
+*.py[cod]
+*.xlsx
+!examples/customers_sample.xlsx
+Telco_customer_churn.xlsx
+.ipynb_checkpoints/
