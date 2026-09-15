@@ -114,11 +114,12 @@ def test_notebook_prepara_il_path_kaggle_prima_di_importare_il_modulo():
         )
     )
 
-    inserimento = (
-        'sys.path.insert(0, '
-        '"/kaggle/input/telco-churn-notebook-support-files")'
-    )
+    ricerca = 'Path("/kaggle/input").rglob("churn_inference.py")'
+    inserimento = "sys.path.insert(0, str(moduli_churn[0].parent))"
+    assert ricerca in cella_setup
+    assert "if len(moduli_churn) != 1:" in cella_setup
     assert inserimento in cella_setup
+    assert cella_setup.index(ricerca) < cella_setup.index(inserimento)
     assert cella_setup.index(inserimento) < cella_setup.index(
         "from churn_inference import valida_dataset_sorgente"
     )
